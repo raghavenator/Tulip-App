@@ -244,23 +244,23 @@ class HomeScreen extends React.Component {
                 BleManager.startNotification(peripheral.id, service, bakeCharacteristic).then(() => {
                   console.log('Started notification on ' + peripheral.id);
                    this.props.navigation.navigate('Details');
-                  setTimeout(() => {
+                  /*setTimeout(() => {
                     BleManager.write(peripheral.id, service, crustCharacteristic, [0]).then(() => {
                       console.log('Writed NORMAL crust');
                       BleManager.write(peripheral.id, service, bakeCharacteristic, [1,95]).then(() => {
                         console.log('Writed 351 temperature, the pizza should be BAKED');
-                        /*
+                        *//*
                         var PizzaBakeResult = {
                           HALF_BAKED: 0,
                           BAKED:      1,
                           CRISPY:     2,
                           BURNT:      3,
                           ON_FIRE:    4
-                        };*/
+                        };*//*
                       });
                     });
 
-                  }, 500);
+                  }, 500);*/
                 }).catch((error) => {
                   console.log('Notification error', error);
                 });
@@ -332,7 +332,8 @@ class HomeScreen extends React.Component {
                        />
                  </ScrollView>
                  <Button
-                     title="Go to Details"
+                     color = '#aabbed'
+                     title="Go to Indoor Map"
                      onPress={() => this.props.navigation.navigate('Details')}
                   />
             </View>
@@ -391,7 +392,7 @@ class HomeScreen extends React.Component {
 //MAP SCREEN STUFF -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 const Dcmap = ({ children }) => (
-  <ImageBackground source={require('./images/dc_anchor.png')} style={{ flex: 1, height: 500}}>
+  <ImageBackground source={require('./images/dc_anchor2.png')} style={{ flex: 1, height: 500}}>
     {children}
   </ImageBackground>
 );
@@ -541,7 +542,6 @@ class DetailsScreen extends React.Component {
   //const avgy = (this.state.count2*2/3) + ((this.state.initpos2)/3);
   var {height, width} = Dimensions.get('window');
     return (
-    <View style={{width: 420}}>
       <Dcmap>
       <View>
            <FlippingImage
@@ -561,14 +561,13 @@ class DetailsScreen extends React.Component {
                 <Text style={{position: 'relative', textAlign: 'left', top:12, fontSize: 24, color: 'white', backgroundColor: '#aabbed'}}>Y: {valy}</Text>
             </View>
             <View style={{width: width/3, height:100, alignItems: 'center'}}>
-                <Text style={{fontSize: 10, color: 'white'}}>Anchor1 ({this.state.anchor1 ? 'Active' : 'Inactive'})</Text>
-                <Text style={{fontSize: 10, color: 'white'}}>Anchor2 ({this.state.anchor2 ? 'Active' : 'Inactive'})</Text>
-                <Text style={{fontSize: 10, color: 'white'}}>Anchor3 ({this.state.anchor3 ? 'Active' : 'Inactive'})</Text>
-                <Text style={{fontSize: 10, color: 'white'}}>Anchor4 ({this.state.anchor4 ? 'Active' : 'Inactive'})</Text>
+                <Text style={{fontSize: 10, color: 'white', top:2}}>Anchor 1 ({this.state.anchor1 ? 'Active' : 'Inactive'})</Text>
+                <Text style={{fontSize: 10, color: 'white', top:2}}>Anchor 2 ({this.state.anchor2 ? 'Active' : 'Inactive'})</Text>
+                <Text style={{fontSize: 10, color: 'white', top:2}}>Anchor 3 ({this.state.anchor3 ? 'Active' : 'Inactive'})</Text>
+                <Text style={{fontSize: 10, color: 'white', top:2}}>Anchor 4 ({this.state.anchor4 ? 'Active' : 'Inactive'})</Text>
             </View>
         </View>
       </Dcmap>
-      </View>
     );
   }
 }
