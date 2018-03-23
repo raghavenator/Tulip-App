@@ -323,17 +323,22 @@ class HomeScreen extends React.Component {
                        return (
                             <TouchableHighlight onPress={() => this.test(item) }>
                                 <View style={[styles.row, {backgroundColor: color}]}>
-                                    <Text style={{fontSize: 12, textAlign: 'center', color: '#333333', padding: 10}}>{item.name}</Text>
-                                    <Text style={{fontSize: 8, textAlign: 'center', color: '#333333', padding: 10}}>{item.id}</Text>
+                                    <Text style={{fontSize: 18, textAlign: 'center', color: '#333333', padding: 10}}>{item.name}</Text>
+                                    <Text style={{fontSize: 14, textAlign: 'center', color: '#333333', padding: 10}}>{item.id}</Text>
                                 </View>
                             </TouchableHighlight>
                        );
                          }}
                        />
                  </ScrollView>
+                 <Button
+                     title="Go to Details"
+                     onPress={() => this.props.navigation.navigate('Details')}
+                  />
             </View>
          </View>
      </View>
+     //<Text>WS Connected? ({this.state.websocket ? 'Yes' : 'No'})</Text>
      /*<View style={{styles.container}}>
              <Button
                 title="Go to Details"
@@ -386,7 +391,7 @@ class HomeScreen extends React.Component {
 //MAP SCREEN STUFF -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 const Dcmap = ({ children }) => (
-  <ImageBackground source={require('./images/dccrop.png')} style={{ flex: 1, height:550}}>
+  <ImageBackground source={require('./images/dc_anchor.png')} style={{ flex: 1, height:500}}>
     {children}
   </ImageBackground>
 );
@@ -410,10 +415,14 @@ class DetailsScreen extends React.Component {
        super(props)
 
        this.state = {
-         count: 180,
-         count2: 200,
-         initpos: 180,
-         initpos2: 200
+         count: 0, //y
+         count2: 0, //x
+         initpos: 0, //y
+         initpos2: 0, //x
+         anchor1: false,
+         anchor2: false,
+         anchor3: false,
+         anchor4: false
        }
 
       //this.tag_x = 20;
@@ -452,14 +461,61 @@ class DetailsScreen extends React.Component {
       if ('rq6p2s' in obj.tag_states)
         {
           this.tag_states['id'] = obj.tag_states['rq6p2s'];
-          this.setState({
+         // if (this.tag_states['id']['y'] >= 0 && this.tag_states['id']['x'] >= 0)
+           // {
+              this.setState({
                     initpos: this.state.count,
                     initpos2: this.state.count2,
-                    count: 25*this.tag_states['id']['x'],
-                    count2: 25*this.tag_states['id']['y']
-           });
+                    count: (6.1855*this.tag_states['id']['y'])+120, //y
+                    count2: (12.5*this.tag_states['id']['x'])+130 //x
+               });
+           // }
           console.log(obj);
+          console.log(obj.anchor_states['0001']['active']);
+          console.log(obj.anchor_states['0002']['active']);
+          console.log(obj.anchor_states['0003']['active']);
+          console.log(obj.anchor_states['0004']['active']);
         }
+      if (obj.anchor_states['0001']['active'] == true)
+        {
+             this.setState({
+                    anchor1: true,
+             });
+        } else {
+             this.setState({
+                    anchor1: false,
+             });
+         }
+      if (obj.anchor_states['0002']['active'] == true)
+         {
+           this.setState({
+                    anchor2: true,
+            });
+         } else {
+              this.setState({
+                    anchor2: false,
+             });
+         }
+      if (obj.anchor_states['0003']['active']== true)
+        {
+          this.setState({
+                    anchor3: true,
+           });
+        } else {
+             this.setState({
+                    anchor3: false,
+            });
+         }
+      if (obj.anchor_states['0004']['active']== true)
+        {
+          this.setState({
+                    anchor4: true,
+           });
+        } else {
+             this.setState({
+                    anchor4: false,
+            });
+         }
     };
 /*    obj = JSON.parse(e.data);
           this.anchor_states = obj.anchor_states;
@@ -477,27 +533,37 @@ class DetailsScreen extends React.Component {
    }
 //end of bluetooth testing
   render() {
-  const valx = this.tag_states['id']['x'];
-  const valy = this.tag_states['id']['y'];
+  const valx = Math.round(this.tag_states['id']['x'] * 100) / 100;
+  const valy = Math.round(this.tag_states['id']['y'] * 100) / 100;
+  //const avgx = (this.state.count*2/3) + ((this.state.initpos)/3);
+  const avgx = this.state.count;
+  const avgy = this.state.count2;
+  //const avgy = (this.state.count2*2/3) + ((this.state.initpos2)/3);
   var {height, width} = Dimensions.get('window');
     return (
       <Dcmap>
       <View>
-      <FlippingImage
-         initx = {this.state.initpos2}
-         inity = {this.state.initpos}
-         finalx = {this.state.count2}
-         finaly = {this.state.count}
-         style={{width: 35, height: 35}}
-         source={require('./images/map_marker.png')}
-      />
+           <FlippingImage
+              initx = {this.state.initpos}
+              inity = {this.state.initpos2}
+              finalx = {avgx}
+              finaly = {avgy}
+              style={{width: 35, height: 35}}
+              source={require('./images/map_marker.png')}
+           />
       </View>
         <View style={{position: 'absolute', top: height - 140, flex: 1, flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#aabbed'}}>
-            <View style={{width: width/2, height:100, alignItems: 'center'}}>
+            <View style={{width: width/3, height:100, alignItems: 'center'}}>
                 <Text style={{position: 'relative',textAlign: 'left', top:12, fontSize: 24, color: 'white', backgroundColor: '#aabbed'}}>X: {valx}</Text>
             </View>
-            <View style={{width: width/2, height:100, alignItems: 'center'}}>
+            <View style={{width: width/3, height:100, alignItems: 'center'}}>
                 <Text style={{position: 'relative', textAlign: 'left', top:12, fontSize: 24, color: 'white', backgroundColor: '#aabbed'}}>Y: {valy}</Text>
+            </View>
+            <View style={{width: width/3, height:100, alignItems: 'center'}}>
+                <Text style={{fontSize: 10, color: 'white'}}>Anchor1 ({this.state.anchor1 ? 'Active' : 'Inactive'})</Text>
+                <Text style={{fontSize: 10, color: 'white'}}>Anchor2 ({this.state.anchor2 ? 'Active' : 'Inactive'})</Text>
+                <Text style={{fontSize: 10, color: 'white'}}>Anchor3 ({this.state.anchor3 ? 'Active' : 'Inactive'})</Text>
+                <Text style={{fontSize: 10, color: 'white'}}>Anchor4 ({this.state.anchor4 ? 'Active' : 'Inactive'})</Text>
             </View>
         </View>
       </Dcmap>
@@ -506,8 +572,48 @@ class DetailsScreen extends React.Component {
 }
 
   /*<View style={{width: 220, left:220, bottom:70}}>
+        <Text>Anchor1 ({this.state.anchor1 ? 'Active' : 'Inactive'})</Text>
+        <Text>Anchor2 ({this.state.anchor2 ? 'Active' : 'Inactive'})</Text>
+        <Text>Anchor3 ({this.state.anchor3 ? 'Active' : 'Inactive'})</Text>
+        <Text>Anchor4 ({this.state.anchor4 ? 'Active' : 'Inactive'})</Text>
              <Text style={{position: 'relative', top:100, textAlign: 'left', fontSize: 18, backgroundColor: 'yellow'}}>X: {valx}</Text>
              <Text style={{position: 'relative', top:100, textAlign: 'left', fontSize: 18, backgroundColor: 'yellow'}}>Y: {valy}</Text>
+                   <FlippingImage
+                      finalx = {12.5*this.state.count2 + 130} // regular axis
+                      finaly = {6.186*this.state.count + 120}
+                      finalx = {12.5*this.state.count + 130} //flipped axis
+                      finaly = {6.186*this.state.count2 + 120}
+                      initx = {this.state.initpos2}
+                      inity = {this.state.initpos}
+                      finalx = {this.state.count2}
+                      finaly = {this.state.count}
+                      style={{width: 35, height: 35}}
+                      source={require('./images/map_marker.png')}
+                   />
+                         <FlippingImage
+                                  initx = {40}
+                                  inity = {200}
+                                  finalx = {40}
+                                  finaly = {200}
+                                  style={{width: 10, height: 10}}
+                                  source={require('./images/green.png')}
+                               />
+                         <FlippingImage
+                                  initx = {110}
+                                  inity = {65}
+                                  finalx = {110}
+                                  finaly = {65}
+                                  style={{width: 10, height: 10}}
+                                  source={require('./images/green.png')}
+                               />
+                         <FlippingImage
+                                  initx = {125}
+                                  inity = {210}
+                                  finalx = {125}
+                                  finaly = {210}
+                                  style={{width: 10, height: 10}}
+                                  source={require('./images/green.png')}
+                          />
   </View>*/
 
 const RootStack = StackNavigator(
