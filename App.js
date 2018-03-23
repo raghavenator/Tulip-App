@@ -391,7 +391,7 @@ class HomeScreen extends React.Component {
 //MAP SCREEN STUFF -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 const Dcmap = ({ children }) => (
-  <ImageBackground source={require('./images/dc_anchor.png')} style={{ height: 500}}>
+  <ImageBackground source={require('./images/dc_anchor.png')} style={{ flex: 1, height: 500}}>
     {children}
   </ImageBackground>
 );
@@ -541,6 +541,7 @@ class DetailsScreen extends React.Component {
   //const avgy = (this.state.count2*2/3) + ((this.state.initpos2)/3);
   var {height, width} = Dimensions.get('window');
     return (
+    <View style={{width: 420}}>
       <Dcmap>
       <View>
            <FlippingImage
@@ -567,6 +568,7 @@ class DetailsScreen extends React.Component {
             </View>
         </View>
       </Dcmap>
+      </View>
     );
   }
 }
