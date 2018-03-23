@@ -391,7 +391,7 @@ class HomeScreen extends React.Component {
 //MAP SCREEN STUFF -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 const Dcmap = ({ children }) => (
-  <ImageBackground source={require('./images/dc_anchor.png')} style={{ flex: 1, height:500}}>
+  <ImageBackground source={require('./images/dc_anchor.png')} style={{ height: 500}}>
     {children}
   </ImageBackground>
 );
